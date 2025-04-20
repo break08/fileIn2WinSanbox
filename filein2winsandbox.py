@@ -5,6 +5,7 @@ import tempfile
 import random
 import os
 
+vgpu = "Disable"
 
 def direct_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
@@ -28,6 +29,12 @@ def direct_output_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
     entry_ouput.delete (0, tk.END)
     entry_ouput.insert (0, folder)
+def vgpu_status():
+    if val_vgpu.get () == 1:
+        global vgpu
+        vgpu = "Enable"
+    else:
+        vgpu = "Disable"
 def creat():
     output_folder = entry_ouput.get()
     filename = entry_filename.get()
@@ -41,6 +48,7 @@ def creat():
         label1.config (text = "Creating file...")
         example = f"""
 <Configuration>
+    <VGpu>{vgpu}</VGpu>
     <MappedFolders>
         <MappedFolder>
             <HostFolder>{file_locate}</HostFolder>
@@ -67,13 +75,14 @@ def creat():
                             
 main = tk.Tk()
 main.geometry ("500x500")
-main.title ("fileIn2WinSanbox v1.0")
+main.title ("fileIn2WinSanbox v2.0")
 icon_path = 'icon/icon.ico'
 main.iconbitmap(icon_path)
 
 val_ranname = tk.IntVar (main, value = 0)
 val_creatintemp = tk.IntVar (main, value = 0)
 val_openinsandbox = tk.IntVar (main, value = 0)
+val_vgpu = tk.IntVar (main, value = 0)
 
 text1 = tk.Label (main, text = "Folder's Location")
 text2 = tk.Label (main, text = "Status")
@@ -82,6 +91,7 @@ text4 = tk.Label (main, text = "Output Location")
 checkbox1 = tk.Checkbutton (main, text = "Create .wsb file in Temp folder in AppData", variable = val_creatintemp, command = creat_in_temp)
 checkbox2 = tk.Checkbutton (main, text = "Open in Windows Sanbox when when the creation process is complete", variable = val_openinsandbox)
 checkbox3 = tk.Checkbutton (main, text = "Random name for Folder", variable = val_ranname, command = random_name)
+checkbox4 = tk.Checkbutton (main, text = "Turn on GPU ", variable = val_vgpu, command = vgpu_status)
 button2 = tk.Button (main, text = "Direct Folder", command = direct_folder)
 button3 = tk.Button (main, text="Start", command = creat)
 button4 = tk.Button (main, text="Direct Output Folder", command = direct_output_folder)
@@ -97,6 +107,7 @@ text4.place (x = 200, y = 10)
 checkbox1.place (x = 10, y = 250)
 checkbox2.place (x = 10, y = 270)
 checkbox3.place (x = 10, y = 290)
+checkbox4.place (x = 200, y = 290)
 button2.place (x = 10, y = 320)
 label1.place (x = 10, y = 70)
 entry_locate.place (x = 10, y = 30)
