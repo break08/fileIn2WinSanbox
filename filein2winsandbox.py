@@ -55,9 +55,6 @@ def creat():
             <ReadOnly>false</ReadOnly>
         </MappedFolder>
     </MappedFolders>
-    <LogonCommand>
-        <Command>explorer.exe</Command>
-    </LogonCommand>
 </Configuration>
 """
         with open (filepathc, "w") as f:
