@@ -4,8 +4,10 @@ from tkinter import messagebox
 import tempfile
 import random
 import os
+from tkinter import ttk
+import json
 
-vgpu = "Disable"
+vgpu_val = "Disable"
 
 def direct_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
@@ -29,12 +31,40 @@ def direct_output_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
     entry_ouput.delete (0, tk.END)
     entry_ouput.insert (0, folder)
-def vgpu_status():
-    if val_vgpu.get () == 1:
-        global vgpu
-        vgpu = "Enable"
-    else:
-        vgpu = "Disable"
+def advanced():
+    adv = tk.Tk()
+    adv.geometry ("500x500")
+    adv.title ("Advanced")
+
+    text1a = tk.Label (adv, text = "VGPU")
+    text1a.place (x = 10, y = 10)
+
+    vgpu = ttk.Combobox (adv, values = ["Enable", "Disable"])
+    vgpu.place (x = 50, y = 10)
+
+    with open ("user-change.json", "r") as f:
+        data = json.load (f)
+
+    def changes():
+        if vgpu.get () == "Enable":
+            data["vgpu"] = "1"
+        else:
+            data["vgpu"] = "0"
+        with open ("user-change.json", "w") as f:
+            json.dump (data, f, indent = 4)
+        global vgpu_val
+        if data["vgpu"] == "1":
+            vgpu_val = "Enable"
+        else:
+            vgpu_val = "Disable"
+    
+    save = tk.Button (adv, text = "Save", command = changes)
+    save.place (x = 10, y = 50)
+    
+        
+    vgpu.set (vgpu_val)
+
+    adv.mainloop()
 def creat():
     output_folder = entry_ouput.get()
     filename = entry_filename.get()
@@ -48,7 +78,7 @@ def creat():
         label1.config (text = "Creating file...")
         example = f"""
 <Configuration>
-    <VGpu>{vgpu}</VGpu>
+    <VGpu>{vgpu_val}</VGpu>
     <MappedFolders>
         <MappedFolder>
             <HostFolder>{file_locate}</HostFolder>
@@ -72,15 +102,15 @@ def creat():
                             
 main = tk.Tk()
 main.geometry ("500x500")
-main.title ("fileIn2WinSanbox v2.0")
+main.title ("fileIn2WinSanbox v3.0 beta")
 icon_path = 'icon/icon.ico'
 main.iconbitmap(icon_path)
 
 val_ranname = tk.IntVar (main, value = 0)
 val_creatintemp = tk.IntVar (main, value = 0)
 val_openinsandbox = tk.IntVar (main, value = 0)
-val_vgpu = tk.IntVar (main, value = 0)
 
+#main
 text1 = tk.Label (main, text = "Folder's Location")
 text2 = tk.Label (main, text = "Status")
 text3 = tk.Label (main, text = ".wsb file's name")
@@ -88,10 +118,10 @@ text4 = tk.Label (main, text = "Output Location")
 checkbox1 = tk.Checkbutton (main, text = "Create .wsb file in Temp folder in AppData", variable = val_creatintemp, command = creat_in_temp)
 checkbox2 = tk.Checkbutton (main, text = "Open in Windows Sanbox when when the creation process is complete", variable = val_openinsandbox)
 checkbox3 = tk.Checkbutton (main, text = "Random name for Folder", variable = val_ranname, command = random_name)
-checkbox4 = tk.Checkbutton (main, text = "Turn on GPU ", variable = val_vgpu, command = vgpu_status)
 button2 = tk.Button (main, text = "Direct Folder", command = direct_folder)
 button3 = tk.Button (main, text="Start", command = creat)
 button4 = tk.Button (main, text="Direct Output Folder", command = direct_output_folder)
+button5 = tk.Button (main, text="Advanced", command = advanced)
 label1 = tk.Label (main, text = "Waiting for input ....", bg = "white", width = 40, height = 8)
 entry_locate = tk.Entry (main)
 entry_filename = tk.Entry (main)
@@ -104,7 +134,6 @@ text4.place (x = 200, y = 10)
 checkbox1.place (x = 10, y = 250)
 checkbox2.place (x = 10, y = 270)
 checkbox3.place (x = 10, y = 290)
-checkbox4.place (x = 200, y = 290)
 button2.place (x = 10, y = 320)
 label1.place (x = 10, y = 70)
 entry_locate.place (x = 10, y = 30)
@@ -112,5 +141,6 @@ entry_filename.place (x = 10, y = 220)
 entry_ouput.place (x = 200, y = 30)
 button3.place (x = 10, y = 350)
 button4.place (x = 100, y = 350)
+button5.place (x = 200, y = 290)
 
 main.mainloop()
