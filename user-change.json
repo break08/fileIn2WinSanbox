@@ -1,3 +1,7 @@
 {
-    "vgpu": "1"
+    "vgpu": "1",
+    "network": "1",
+    "audio": "1",
+    "video": "1",
+    "graphicsgpu": "1"
 }
