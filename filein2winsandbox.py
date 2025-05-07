@@ -30,7 +30,7 @@ def langcheck_main():
         button5.config (text = "Advanced")
         button6.config (text = "Personalize")
         label1.config (text = "Waiting for input ....")
-    if lang_val == "Vietnamese":
+    if lang_val == "Tiếng Việt":
         text1.config (text = "Đường dẫn đến thư mục")
         text2.config (text = "Trạng thái")
         text3.config (text = "Tên file .wsb")
@@ -44,12 +44,12 @@ def langcheck_main():
         button5.config (text = "Nâng cao")
         button6.config (text = "Cá nhân hóa")
         label1.config (text = "Đang chờ nhập ....")
-    if lang_val == "Chinese":
+    if lang_val == "中国人":
         text1.config (text = "文件夹位置")
         text2.config (text = "状态")
         text3.config (text = ".wsb 文件名")
         text4.config (text = "输出位置")
-        checkbox1.config (text = "在 AppData 的 Temp 文件夹中创建 .wsb 文件")
+        checkbox1.config (text = "在 AppData 的 Temp 文件夹中创建 .wsb 文件 ")
         checkbox2.config (text = "创建完成后在 Windows Sanbox 中打开")
         checkbox3.config (text = "文件夹的随机名称")
         button2.config (text = "选择文件夹")
@@ -60,6 +60,7 @@ def langcheck_main():
         label1.config (text = "等待输入 ....")
 def direct_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
+    entry_locate.delete (0, tk.END)
     entry_locate.insert (0, folder)
 def random_name():
     name = random.randint (0, 100000000000000000000000000000)
@@ -94,7 +95,7 @@ def advanced():
             text5a.config (text = "Graphics")
             text6a.config (text = "Read Only")
             save.config (text = "Save")
-        if lang_val == "Vietnamese":
+        if lang_val == "Tiếng Việt":
             text1a.config (text = "VGPU")
             text2a.config (text = "Mạng")
             text3a.config (text = "Âm thanh")
@@ -102,7 +103,7 @@ def advanced():
             text5a.config (text = "Đồ họa")
             text6a.config (text = "Chỉ đọc")
             save.config (text = "Lưu")
-        if lang_val == "Chinese":
+        if lang_val == "中国人":
             text1a.config (text = "VGPU")
             text2a.config (text = "网络")
             text3a.config (text = "音频")
@@ -187,7 +188,7 @@ def advanced():
         graphics_val = "Default"
         graphics.set ("Default")
 
-    if data["readonly"] == "false":
+    if data["readonly"] == "0":
         readonly_val = "false"
         readonly.set ("false")
     else:
@@ -196,7 +197,7 @@ def advanced():
 
     def changes():
         #check
-        global vgpu_val, network_val, audio_val, video_val, graphics_val
+        global vgpu_val, network_val, audio_val, video_val, graphics_val, readonly_val
         if vgpu.get () == "Enable":
             vgpu_val = "Enable"
             data["vgpu"] = "1"
@@ -232,6 +233,13 @@ def advanced():
             graphics_val = "Disable"
             data["graphicsgpu"] = "0"
         
+        if readonly.get () == "true":
+            readonly_val = "true"
+            data["readonly"] = "1"
+        else:
+            readonly_val = "false"
+            data["readonly"] = "0"
+        
         #write
         with open ("user-change.json", "w") as f:
             json.dump (data, f, indent = 4)
@@ -252,15 +260,15 @@ def personalize():
         if lang_val == "English":
             note1.config (text = "Language")
             save.config (text = "Save")
-        if lang_val == "Vietnamese":
+        if lang_val == "Tiếng Việt":
             note1.config (text = "Ngôn ngữ")
             save.config (text = "Lưu")
-        if lang_val == "Chinese":
+        if lang_val == "中国人":
             note1.config (text = "语言")
             save.config (text = "保存")
     note1 = tk.Label (setting, text = "Language")
     note1.place (x = 10, y = 10)
-    lang = ttk.Combobox (setting, values = ["English", "Vietnamese", "Chinese"])
+    lang = ttk.Combobox (setting, values = ["English", "Tiếng Việt", "中国人"])
     lang.place (x = 80, y = 10)
     with open ("user-change.json", "r") as f:
         data = json.load (f)
@@ -269,22 +277,22 @@ def personalize():
         lang_val = "English"
         lang.set ("English")
     elif data["language"] == "vietnamese":
-        lang_val = "Vietnamese"
-        lang.set ("Vietnamese")
+        lang_val = "Tiếng Việt"
+        lang.set ("Tiếng Việt")
     elif data["language"] == "chinese":
-        lang_val = "Chinese"
-        lang.set ("Chinese")
+        lang_val = "中国人"
+        lang.set ("中国人")
     def save_set ():
         global lang_val
         with open ("user-change.json", "w") as f:
             if lang.get () == "English":
                 lang_val = "English"
                 data["language"] = "english"
-            elif lang.get () == "Vietnamese":
-                lang_val = "Vietnamese"
+            elif lang.get () == "Tiếng Việt":
+                lang_val = "Tiếng Việt"
                 data["language"] = "vietnamese"
-            elif lang.get () == "Chinese":
-                lang_val = "Chinese"
+            elif lang.get () == "中国人":
+                lang_val = "中国人"
                 data["language"] = "chinese"
             json.dump (data, f, indent = 4)
         langcheck_main()
@@ -295,6 +303,8 @@ def personalize():
     setting.mainloop()
 def creat():
     output_folder = entry_ouput.get()
+    if not entry_filename.get()[-4:] == ".wsb":
+        entry_filename.insert (tk.END, ".wsb")
     filename = entry_filename.get()
     file_locate = entry_locate.get()
     file_locate = file_locate.replace ("/", "\\")
@@ -305,9 +315,9 @@ def creat():
         entry_ouput.config (state = "disabled")
         if lang_val == "English":
             label1.config (text = "Creating file...")
-        elif lang_val == "Vietnamese":
+        elif lang_val == "Tiếng Việt":
             label1.config (text = "Đang tạo file...")
-        elif lang_val == "Chinese":
+        elif lang_val == "中国人":
             label1.config (text = "正在创建文件...")
         example = f"""
 <Configuration>
@@ -318,6 +328,7 @@ def creat():
             <ReadOnly>{readonly_val}</ReadOnly>
         </MappedFolder>
     </MappedFolders>
+    <ReadOnly>{readonly_val}</ReadOnly>
     <Networking>{network_val}</Networking>
     <AudioInput>{audio_val}</AudioInput>
     <VideoInput>{video_val}</VideoInput>
@@ -330,7 +341,7 @@ def creat():
             os.startfile (filepathc)
         if lang_val == "English":
             label1.config (text = "File Created Successfully")
-        elif lang_val == "Vietnamese":
+        elif lang_val == "Tiếng Việt":
             label1.config (text = "Tạo file thành công")
         entry_locate.config (state = "normal")
         entry_filename.config (state = "normal")
@@ -340,7 +351,8 @@ def creat():
     else:
         messagebox.showerror ("Error", "Please fill all fields")
         label1.config (text = "Error, try again")
-                            
+with open ("user-change.json", "r") as f:
+    data = json.load (f)
 main = tk.Tk()
 main.geometry ("660x800")
 main.title ("fileIn2WinSanbox v3.0 beta")
@@ -393,14 +405,12 @@ button5.place (x = 200, y = 290)
 button6.place (x = 100, y = 320)
 
 #language
-with open ("user-change.json", "r") as f:
-    data = json.load (f)
 if data["language"] == "english":
     lang_val = "English"
 elif data["language"] == "vietnamese":
-    lang_val = "Vietnamese"
+    lang_val = "Tiếng Việt"
 elif data["language"] == "chinese":
-    lang_val = "Chinese"
+    lang_val = "中国人"
 langcheck_main()
 
 main.mainloop()
