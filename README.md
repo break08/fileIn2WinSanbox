@@ -10,15 +10,7 @@ Create .wsb to put folder into Windows Sanbox
 
 ## .py file run dependency
 
-Need these libraries:
-
-`tkinter`
-
-`tempfile`
-
-`random`
-
-`os`
+Need these libraries: `tkinter` (include : `filedialog`, `messagebox`, `ttk`),`tempfile`,`random`,`os`,`json`
 
 ## How to use
 
