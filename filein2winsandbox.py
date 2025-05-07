@@ -355,7 +355,7 @@ with open ("user-change.json", "r") as f:
     data = json.load (f)
 main = tk.Tk()
 main.geometry ("660x800")
-main.title ("fileIn2WinSanbox v3.0 beta")
+main.title ("fileIn2WinSanbox v3.0 stable")
 icon_path = 'icon/icon.ico'
 main.iconbitmap(icon_path)
 
