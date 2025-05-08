@@ -380,7 +380,7 @@ label1 = tk.Label (main, text = "Waiting for input ....", bg = "white", width = 
 entry_locate = tk.Entry (main)
 entry_filename = tk.Entry (main)
 entry_ouput = tk.Entry (main)
-file_content = tk.Text (main, wrap = "char", width = 80, height = 20)
+file_content = tk.Text (main, wrap = "none", width = 80, height = 20)
 sbar1 = tk.Scrollbar (main, orient = "vertical", command = file_content.yview)
 sbar2 = tk.Scrollbar (main, orient = "horizontal", command = file_content.xview)
 file_content.config (yscrollcommand = sbar1.set, xscrollcommand = sbar2.set)
