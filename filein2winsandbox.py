@@ -458,6 +458,34 @@ elif data["language"] == "chinese":
     lang_val = "中国人"
 elif data["language"] == "spanish":
     lang_val = "Español"
+if data["vgpu"] == "0":
+    vgpu_val = "Disable"
+else:
+    vgpu_val = "Enable"
+if data["network"] == "0":
+    network_val = "Disable"
+else:
+    network_val = "Default"
+
+if data["audio"] == "0":
+    audio_val = "Disable"
+else:
+    audio_val = "Default"
+
+if data["video"] == "0":
+    video_val = "Disable"
+else:
+    video_val = "Default"
+
+if data["graphicsgpu"] == "0":
+    graphics_val = "Disable"
+else:
+    graphics_val = "Default"
+
+if data["readonly"] == "0":
+    readonly_val = "false"
+else:
+    readonly_val = "true"
 langcheck_main()
 
 main.mainloop()
