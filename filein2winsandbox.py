@@ -58,6 +58,20 @@ def langcheck_main():
         button5.config (text = "高级")
         button6.config (text = "个性化")
         label1.config (text = "等待输入 ....")
+    if lang_val == "Español":
+        text1.config (text = "Ubicación de la carpeta")
+        text2.config (text = "Estado")
+        text3.config (text = "Nombre del archivo .wsb")
+        text4.config (text = "Ubicación de salida")
+        checkbox1.config (text = "Crear archivo .wsb en la carpeta Temp en AppData")
+        checkbox2.config (text = "Abrir en Windows Sanbox cuando se complete el proceso de creación")
+        checkbox3.config (text = "Nombre aleatorio para la carpeta")
+        button2.config (text = "Seleccionar carpeta")
+        button3.config (text = "Comenzar")
+        button4.config (text = "Seleccionar carpeta de salida")
+        button5.config (text = "Avanzado")
+        button6.config (text = "Personalizar")
+        label1.config (text = "Esperando entrada ....")
 def direct_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
     entry_locate.delete (0, tk.END)
@@ -95,6 +109,7 @@ def advanced():
             text5a.config (text = "Graphics")
             text6a.config (text = "Read Only")
             save.config (text = "Save")
+            adv.title ("Advanced")
         if lang_val == "Tiếng Việt":
             text1a.config (text = "VGPU")
             text2a.config (text = "Mạng")
@@ -103,6 +118,7 @@ def advanced():
             text5a.config (text = "Đồ họa")
             text6a.config (text = "Chỉ đọc")
             save.config (text = "Lưu")
+            adv.title ("Nâng cao")
         if lang_val == "中国人":
             text1a.config (text = "VGPU")
             text2a.config (text = "网络")
@@ -111,7 +127,16 @@ def advanced():
             text5a.config (text = "图形")
             text6a.config (text = "只读")
             save.config (text = "保存")
-
+            adv.title ("高级")
+        if lang_val == "Español":
+            text1a.config (text = "VGPU")
+            text2a.config (text = "Red")
+            text3a.config (text = "Audio")
+            text4a.config (text = "Vídeo")
+            text5a.config (text = "Gráficos")
+            text6a.config (text = "Solo lectura")
+            save.config (text = "Guardar")
+            adv.title ("Avanzado")
     text1a = tk.Label (adv, text = "VGPU")
     text1a.place (x = 5, y = 10)
 
@@ -260,15 +285,22 @@ def personalize():
         if lang_val == "English":
             note1.config (text = "Language")
             save.config (text = "Save")
+            setting.title ("Personalize")
         if lang_val == "Tiếng Việt":
             note1.config (text = "Ngôn ngữ")
             save.config (text = "Lưu")
+            setting.title ("Cá nhân hóa")
         if lang_val == "中国人":
             note1.config (text = "语言")
             save.config (text = "保存")
+            setting.title ("个性化")
+        if lang_val == "Español":
+            note1.config (text = "Idioma")
+            save.config (text = "Guardar")
+            setting.title ("Personalizar")
     note1 = tk.Label (setting, text = "Language")
     note1.place (x = 10, y = 10)
-    lang = ttk.Combobox (setting, values = ["English", "Tiếng Việt", "中国人"])
+    lang = ttk.Combobox (setting, values = ["English", "Español", "Tiếng Việt", "中国人"])
     lang.place (x = 80, y = 10)
     with open ("user-change.json", "r") as f:
         data = json.load (f)
@@ -282,6 +314,9 @@ def personalize():
     elif data["language"] == "chinese":
         lang_val = "中国人"
         lang.set ("中国人")
+    elif data["language"] == "spanish":
+        lang_val = "Español"
+        lang.set ("Español")
     def save_set ():
         global lang_val
         with open ("user-change.json", "w") as f:
@@ -294,6 +329,9 @@ def personalize():
             elif lang.get () == "中国人":
                 lang_val = "中国人"
                 data["language"] = "chinese"
+            elif lang.get () == "Español":
+                lang_val = "Español"
+                data["language"] = "spanish"
             json.dump (data, f, indent = 4)
         langcheck_main()
         langcheck_personalize()
@@ -319,6 +357,8 @@ def creat():
             label1.config (text = "Đang tạo file...")
         elif lang_val == "中国人":
             label1.config (text = "正在创建文件...")
+        elif lang_val == "Español":
+            label1.config (text = "Creando archivo...")
         example = f"""
 <Configuration>
     <VGpu>{vgpu_val}</VGpu>
@@ -335,7 +375,7 @@ def creat():
     <GraphicsGPU>{graphics_val}</GraphicsGPU>
 </Configuration>
 """
-        with open (filepathc, "w") as f:
+        with open (filepathc, "w", encoding="utf-8") as f:
             f.write (example)
         if val_openinsandbox.get () == 1:
             os.startfile (filepathc)
@@ -343,6 +383,10 @@ def creat():
             label1.config (text = "File Created Successfully")
         elif lang_val == "Tiếng Việt":
             label1.config (text = "Tạo file thành công")
+        elif lang_val == "中国人":
+            label1.config (text = "文件创建成功")
+        elif lang_val == "Español":
+            label1.config (text = "Archivo creado con éxito")
         entry_locate.config (state = "normal")
         entry_filename.config (state = "normal")
         entry_ouput.config (state = "normal")
@@ -355,7 +399,8 @@ with open ("user-change.json", "r") as f:
     data = json.load (f)
 main = tk.Tk()
 main.geometry ("660x800")
-main.title ("fileIn2WinSanbox v3.0 stable")
+main.title ("fileIn2WinSanbox v3.0stable")
+main.resizable (width = False, height = False)
 icon_path = 'icon/icon.ico'
 main.iconbitmap(icon_path)
 
@@ -400,9 +445,9 @@ entry_filename.place (x = 10, y = 220)
 entry_ouput.place (x = 200, y = 30)
 file_content.place (x = 10, y = 400)
 button3.place (x = 10, y = 350)
-button4.place (x = 100, y = 350)
-button5.place (x = 200, y = 290)
-button6.place (x = 100, y = 320)
+button4.place (x = 150, y = 350)
+button5.place (x = 230, y = 290)
+button6.place (x = 150, y = 320)
 
 #language
 if data["language"] == "english":
@@ -411,6 +456,8 @@ elif data["language"] == "vietnamese":
     lang_val = "Tiếng Việt"
 elif data["language"] == "chinese":
     lang_val = "中国人"
+elif data["language"] == "spanish":
+    lang_val = "Español"
 langcheck_main()
 
 main.mainloop()
