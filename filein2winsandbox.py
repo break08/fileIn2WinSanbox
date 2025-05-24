@@ -6,6 +6,9 @@ import random
 import os
 from tkinter import ttk
 import json
+import webbrowser
+import markdown
+from tkhtmlview import HTMLLabel
 
 vgpu_val = "Disable"
 network_val = "Default"
@@ -395,11 +398,35 @@ def creat():
     else:
         messagebox.showerror ("Error", "Please fill all fields")
         label1.config (text = "Error, try again")
+def MIT_LICENSE():
+    with open ("LICENSE", "r") as f:
+        license_text = f.read()
+    license_window = tk.Tk()
+    license_window.title ("MIT LICENSE")
+    license_window.geometry ("500x500")
+    license_window.resizable (width = False, height = False)
+    text = tk.Text (license_window, wrap = "word")
+    text.insert (tk.END, license_text)
+    text.pack (fill = tk.BOTH, expand = True)
+    sbar = tk.Scrollbar (license_window, orient = "vertical", command = text.yview)
+    sbar.pack (side = tk.RIGHT, fill = tk.Y)
+    license_window.mainloop()
+def README():
+    with open ("README.md", "r") as f:
+        readme_text = f.read()
+    readme_window = tk.Tk()
+    readme_window.title ("README")
+    readme_window.geometry ("500x500")
+    readme_window.resizable (width = False, height = False)
+    content = markdown.markdown (readme_text)
+    label = HTMLLabel(readme_window, html=content)
+    label.pack(fill="both", expand=True, padx=10, pady=10)
+    readme_window.mainloop()
 with open ("user-change.json", "r") as f:
     data = json.load (f)
 main = tk.Tk()
 main.geometry ("660x600")
-main.title ("fileIn2WinSanbox v3.2")
+main.title ("fileIn2WinSanbox v3.2beta")
 main.resizable (width = False, height = False)
 icon_path = 'icon/icon.ico'
 main.iconbitmap(icon_path)
@@ -426,9 +453,18 @@ entry_locate = tk.Entry (main)
 entry_filename = tk.Entry (main)
 entry_ouput = tk.Entry (main)
 file_content = tk.Text (main, wrap = "none", width = 80, height = 20)
-sbar1 = tk.Scrollbar (main, orient = "vertical", command = file_content.yview)
-sbar2 = tk.Scrollbar (main, orient = "horizontal", command = file_content.xview)
-file_content.config (yscrollcommand = sbar1.set, xscrollcommand = sbar2.set)
+menubar = tk.Menu (main)
+main.config (menu = menubar)
+file_menu = tk.Menu (menubar, tearoff = 0)
+menubar.add_cascade (label = "File", menu = file_menu)
+file_menu.add_command (label = "Exit", command = main.quit)
+about_menu = tk.Menu (menubar, tearoff = 0)
+menubar.add_cascade (label = "About", menu = about_menu)
+about_menu.add_command (label = "About", command = lambda: messagebox.showinfo ("About", "fileIn2WinSanbox v3.2beta"))
+about_menu.add_command (label = "Github", command = lambda: webbrowser.open ("https://github.com/break08/fileIn2WinSanbox"))
+about_menu.add_command (label = "MIT LICENSE", command = MIT_LICENSE)
+about_menu.add_command (label = "README", command = README)
+
 
 #pack
 text1.place (x = 10, y = 10)
