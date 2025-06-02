@@ -9,6 +9,7 @@ import json
 import webbrowser
 import markdown
 from tkhtmlview import HTMLLabel
+from pathlib import Path
 
 vgpu_val = "Disable"
 network_val = "Default"
@@ -422,6 +423,16 @@ def README():
     label = HTMLLabel(readme_window, html=content)
     label.pack(fill="both", expand=True, padx=10, pady=10)
     readme_window.mainloop()
+def open_editor_mode():
+    path_edit = Path (__file__)
+    parentfolder = path_edit.parent.absolute()
+    search = os.listdir (parentfolder)
+    if "editor_mode.py" in search:
+        os.system ("python editor_mode.py")
+    elif "editor_mode.exe" in search:
+        os.system ("editor_mode.exe")
+    else:
+        messagebox.showerror ("Error", "Editor mode not found")
 with open ("user-change.json", "r") as f:
     data = json.load (f)
 main = tk.Tk()
@@ -464,6 +475,7 @@ about_menu.add_command (label = "About", command = lambda: messagebox.showinfo (
 about_menu.add_command (label = "Github", command = lambda: webbrowser.open ("https://github.com/break08/fileIn2WinSanbox"))
 about_menu.add_command (label = "MIT LICENSE", command = MIT_LICENSE)
 about_menu.add_command (label = "README", command = README)
+file_menu.add_command (label = "Open Editor Mode", command = open_editor_mode)
 
 
 #pack
