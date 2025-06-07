@@ -9,7 +9,6 @@ import json
 import webbrowser
 import markdown
 from tkhtmlview import HTMLLabel
-from pathlib import Path
 
 vgpu_val = "Disable"
 network_val = "Default"
@@ -18,6 +17,69 @@ video_val = "Default"
 graphics_val = "Default"
 readonly_val = "false"
 lang_val = "English"
+edit = False
+
+main = tk.Tk()
+main.geometry ("1000x600")
+main.title ("fileIn2WinSanbox v3.2beta")
+main.resizable (width = False, height = False)
+icon_path = 'icon/icon.ico'
+main.iconbitmap(icon_path)
+
+def open_file():
+    global edit
+    edit = True
+    file_path = filedialog.askopenfilename(title="Open File", filetypes=[("WSB Files", "*.wsb")])
+    if file_path:
+        locatefile = os.path.dirname(file_path)
+        entry_ouput.delete(0, tk.END)
+        entry_ouput.insert(0, locatefile)
+        filename = os.path.basename(file_path)
+        entry_filename.delete(0, tk.END)
+        entry_filename.insert(0, filename)
+        text2.config (text = "Editing Mode...")
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+            file_content.delete(1.0, tk.END)
+            file_content.insert(tk.END, content)
+        global vgpu_val, network_val, audio_val, video_val, graphics_val, readonly_val
+        for line in content.splitlines():
+            if line == "    <VGpu>Enable</VGpu>":
+                vgpu_val = "Enable"
+                vgpu.set("Enable")
+            elif line == "    <VGpu>Disable</VGpu>":
+                vgpu_val = "Disable"
+                vgpu.set("Disable")
+            if line == "    <Networking>Default</Networking>":
+                network_val = "Default"
+                network.set("Default")
+            elif line == "    <Networking>Disable</Networking>":
+                network_val = "Disable"
+                network.set("Disable")
+            if line == "    <AudioInput>Default</AudioInput>":
+                audio_val = "Default"
+                audio.set("Default")
+            elif line == "    <AudioInput>Disable</AudioInput>":
+                audio_val = "Disable"
+                audio.set("Disable")
+            if line == "    <VideoInput>Default</VideoInput>":
+                video_val = "Default"
+                video.set("Default")
+            elif line == "    <VideoInput>Disable</VideoInput>":
+                video_val = "Disable"
+                video.set("Disable")
+            if line == "    <GraphicsGPU>Default</GraphicsGPU>":
+                graphics_val = "Default"
+                graphics.set("Default")
+            elif line == "    <GraphicsGPU>Disable</GraphicsGPU>":
+                graphics_val = "Disable"
+                graphics.set("Disable")
+            if line == "    <ReadOnly>true</ReadOnly>":
+                readonly_val = "true"
+                readonly.set("true")
+            elif line == "    <ReadOnly>false</ReadOnly>":
+                readonly_val = "false"
+                readonly.set("false")
 
 def langcheck_main():
     if lang_val == "English":
@@ -31,8 +93,6 @@ def langcheck_main():
         button2.config (text = "Direct Folder")
         button3.config (text = "Start")
         button4.config (text = "Direct Output Folder")
-        button5.config (text = "Advanced")
-        button6.config (text = "Personalize")
         label1.config (text = "Waiting for input ....")
     if lang_val == "Tiếng Việt":
         text1.config (text = "Đường dẫn đến thư mục")
@@ -45,8 +105,6 @@ def langcheck_main():
         button2.config (text = "Chọn thư mục")
         button3.config (text = "Bắt đầu")
         button4.config (text = "Chọn thư mục đầu ra")
-        button5.config (text = "Nâng cao")
-        button6.config (text = "Cá nhân hóa")
         label1.config (text = "Đang chờ nhập ....")
     if lang_val == "中国人":
         text1.config (text = "文件夹位置")
@@ -59,8 +117,6 @@ def langcheck_main():
         button2.config (text = "选择文件夹")
         button3.config (text = "开始")
         button4.config (text = "选择输出文件夹")
-        button5.config (text = "高级")
-        button6.config (text = "个性化")
         label1.config (text = "等待输入 ....")
     if lang_val == "Español":
         text1.config (text = "Ubicación de la carpeta")
@@ -73,8 +129,6 @@ def langcheck_main():
         button2.config (text = "Seleccionar carpeta")
         button3.config (text = "Comenzar")
         button4.config (text = "Seleccionar carpeta de salida")
-        button5.config (text = "Avanzado")
-        button6.config (text = "Personalizar")
         label1.config (text = "Esperando entrada ....")
 def direct_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
@@ -99,88 +153,78 @@ def direct_output_folder():
     folder = filedialog.askdirectory (title = "Select your folder")
     entry_ouput.delete (0, tk.END)
     entry_ouput.insert (0, folder)
-def advanced():
-    adv = tk.Tk()
-    adv.geometry ("500x500")
-    adv.title ("Advanced")
+def langcheck_advanced():
+    if lang_val == "English":
+        text1a.config (text = "VGPU")
+        text2a.config (text = "Network")
+        text3a.config (text = "Audio")
+        text4a.config (text = "Video")
+        text5a.config (text = "Graphics")
+        text6a.config (text = "Read Only")
+        save.config (text = "Save")
+    if lang_val == "Tiếng Việt":
+        text1a.config (text = "VGPU")
+        text2a.config (text = "Mạng")
+        text3a.config (text = "Âm thanh")
+        text4a.config (text = "Video")
+        text5a.config (text = "Đồ họa")
+        text6a.config (text = "Chỉ đọc")
+        save.config (text = "Lưu")
+    if lang_val == "中国人":
+        text1a.config (text = "VGPU")
+        text2a.config (text = "网络")
+        text3a.config (text = "音频")
+        text4a.config (text = "视频")
+        text5a.config (text = "图形")
+        text6a.config (text = "只读")
+        save.config (text = "保存")
+    if lang_val == "Español":
+        text1a.config (text = "VGPU")
+        text2a.config (text = "Red")
+        text3a.config (text = "Audio")
+        text4a.config (text = "Vídeo")
+        text5a.config (text = "Gráficos")
+        text6a.config (text = "Solo lectura")
+        save.config (text = "Guardar")
+text1a = tk.Label (main, text = "VGPU")
+text1a.place (x = 600, y = 10)
 
-    def langcheck_advanced():
-        if lang_val == "English":
-            text1a.config (text = "VGPU")
-            text2a.config (text = "Network")
-            text3a.config (text = "Audio")
-            text4a.config (text = "Video")
-            text5a.config (text = "Graphics")
-            text6a.config (text = "Read Only")
-            save.config (text = "Save")
-            adv.title ("Advanced")
-        if lang_val == "Tiếng Việt":
-            text1a.config (text = "VGPU")
-            text2a.config (text = "Mạng")
-            text3a.config (text = "Âm thanh")
-            text4a.config (text = "Video")
-            text5a.config (text = "Đồ họa")
-            text6a.config (text = "Chỉ đọc")
-            save.config (text = "Lưu")
-            adv.title ("Nâng cao")
-        if lang_val == "中国人":
-            text1a.config (text = "VGPU")
-            text2a.config (text = "网络")
-            text3a.config (text = "音频")
-            text4a.config (text = "视频")
-            text5a.config (text = "图形")
-            text6a.config (text = "只读")
-            save.config (text = "保存")
-            adv.title ("高级")
-        if lang_val == "Español":
-            text1a.config (text = "VGPU")
-            text2a.config (text = "Red")
-            text3a.config (text = "Audio")
-            text4a.config (text = "Vídeo")
-            text5a.config (text = "Gráficos")
-            text6a.config (text = "Solo lectura")
-            save.config (text = "Guardar")
-            adv.title ("Avanzado")
-    text1a = tk.Label (adv, text = "VGPU")
-    text1a.place (x = 5, y = 10)
+vgpu = ttk.Combobox (main, values = ["Enable", "Disable"])
+vgpu.place (x = 700, y = 10)
 
-    vgpu = ttk.Combobox (adv, values = ["Enable", "Disable"])
-    vgpu.place (x = 80, y = 10)
+network = ttk.Combobox (main, values = ["Default", "Disable"])
+network.place (x = 700, y = 50)
 
-    network = ttk.Combobox (adv, values = ["Default", "Disable"])
-    network.place (x = 80, y = 50)
+text2a = tk.Label (main, text = "Network")
+text2a.place (x = 600, y = 50)
 
-    text2a = tk.Label (adv, text = "Network")
-    text2a.place (x = 5, y = 50)
+text3a = tk.Label (main, text = "Audio")
+text3a.place (x = 600, y = 90)
 
-    text3a = tk.Label (adv, text = "Audio")
-    text3a.place (x = 5, y = 90)
+audio = ttk.Combobox (main, values = ["Default", "Disable"])
+audio.place (x = 700, y = 90)
 
-    audio = ttk.Combobox (adv, values = ["Default", "Disable"])
-    audio.place (x = 80, y = 90)
+text4a = tk.Label (main, text = "Video")
+text4a.place (x = 600, y = 130)
 
-    text4a = tk.Label (adv, text = "Video")
-    text4a.place (x = 5, y = 130)
+video = ttk.Combobox (main, values = ["Default", "Disable"])
+video.place (x = 700, y = 130)
 
-    video = ttk.Combobox (adv, values = ["Default", "Disable"])
-    video.place (x = 80, y = 130)
+text5a = tk.Label (main, text = "Graphics")
+text5a.place (x = 600, y = 170)
 
-    text5a = tk.Label (adv, text = "Graphics")
-    text5a.place (x = 5, y = 170)
+graphics = ttk.Combobox (main, values = ["Default", "Disable"])
+graphics.place (x = 700, y = 170)
 
-    graphics = ttk.Combobox (adv, values = ["Default", "Disable"])
-    graphics.place (x = 80, y = 170)
+readonly = ttk.Combobox (main, values = ["true", "false"])
+readonly.place (x = 700, y = 210)
 
-    readonly = ttk.Combobox (adv, values = ["true", "false"])
-    readonly.place (x = 80, y = 210)
+text6a = tk.Label (main, text = "Read Only")
+text6a.place (x = 600, y = 210)
 
-    text6a = tk.Label (adv, text = "Read Only")
-    text6a.place (x = 5, y = 210)
-
+if edit == False:
     with open ("user-change.json", "r") as f:
         data = json.load (f)
-    
-    global vgpu_val, network_val, audio_val, video_val, graphics_val, readonly_val
 
     if data["vgpu"] == "0":
         vgpu_val = "Disable"
@@ -195,21 +239,21 @@ def advanced():
     else:
         network_val = "Default"
         network.set ("Default")
-    
+
     if data["audio"] == "0":
         audio_val = "Disable"
         audio.set ("Disable")
     else:
         audio_val = "Default"
         audio.set ("Default")
-    
+
     if data["video"] == "0":
         video_val = "Disable"
         video.set ("Disable")
     else:
         video_val = "Default"
         video.set ("Default")
-    
+
     if data["graphicsgpu"] == "0":
         graphics_val = "Disable"
         graphics.set ("Disable")
@@ -224,63 +268,60 @@ def advanced():
         readonly_val = "true"
         readonly.set ("true")
 
-    def changes():
-        #check
-        global vgpu_val, network_val, audio_val, video_val, graphics_val, readonly_val
-        if vgpu.get () == "Enable":
-            vgpu_val = "Enable"
-            data["vgpu"] = "1"
-        else:
-            vgpu_val = "Disable"
-            data["vgpu"] = "0"
-        
-        if network.get () == "Default":
-            network_val = "Default"
-            data["network"] = "1"
-        else:
-            network_val = "Disable"
-            data["network"] = "0"
-        
-        if audio.get () == "Default":
-            audio_val = "Default"
-            data["audio"] = "1"
-        else:
-            audio_val = "Disable"
-            data["audio"] = "0"
-        
-        if video.get () == "Default":
-            video_val = "Default"
-            data["video"] = "1"
-        else:
-            video_val = "Disable"
-            data["video"] = "0"
-
-        if graphics.get () == "Default":
-            graphics_val = "Default"
-            data["graphicsgpu"] = "1"
-        else:
-            graphics_val = "Disable"
-            data["graphicsgpu"] = "0"
-        
-        if readonly.get () == "true":
-            readonly_val = "true"
-            data["readonly"] = "1"
-        else:
-            readonly_val = "false"
-            data["readonly"] = "0"
-        
-        #write
-        with open ("user-change.json", "w") as f:
-            json.dump (data, f, indent = 4)
+def changes():
+    #check
+    global vgpu_val, network_val, audio_val, video_val, graphics_val, readonly_val
+    if vgpu.get () == "Enable":
+        vgpu_val = "Enable"
+        data["vgpu"] = "1"
+    else:
+        vgpu_val = "Disable"
+        data["vgpu"] = "0"
     
-    save = tk.Button (adv, text = "Save", command = changes)
-    save.place (x = 250, y = 10)
+    if network.get () == "Default":
+        network_val = "Default"
+        data["network"] = "1"
+    else:
+        network_val = "Disable"
+        data["network"] = "0"
+    
+    if audio.get () == "Default":
+        audio_val = "Default"
+        data["audio"] = "1"
+    else:
+        audio_val = "Disable"
+        data["audio"] = "0"
+    
+    if video.get () == "Default":
+        video_val = "Default"
+        data["video"] = "1"
+    else:
+        video_val = "Disable"
+        data["video"] = "0"
 
-    langcheck_advanced()    
-        
-    vgpu.set (vgpu_val)
+    if graphics.get () == "Default":
+        graphics_val = "Default"
+        data["graphicsgpu"] = "1"
+    else:
+        graphics_val = "Disable"
+        data["graphicsgpu"] = "0"
+    
+    if readonly.get () == "true":
+        readonly_val = "true"
+        data["readonly"] = "1"
+    else:
+        readonly_val = "false"
+        data["readonly"] = "0"
+    
+    #write
+    with open ("user-change.json", "w") as f:
+        json.dump (data, f, indent = 4)
 
-    adv.mainloop()
+save = tk.Button (main, text = "Save", command = changes)
+save.place (x = 850, y = 10) 
+    
+vgpu.set (vgpu_val)
+
 def personalize():
     setting = tk.Tk()
     setting.title ("Personalize")
@@ -339,6 +380,7 @@ def personalize():
             json.dump (data, f, indent = 4)
         langcheck_main()
         langcheck_personalize()
+        langcheck_advanced()
     save = tk.Button (setting, text = "Save", command = save_set)
     save.place (x = 250, y = 10)
     langcheck_personalize()
@@ -423,24 +465,8 @@ def README():
     label = HTMLLabel(readme_window, html=content)
     label.pack(fill="both", expand=True, padx=10, pady=10)
     readme_window.mainloop()
-def open_editor_mode():
-    path_edit = Path (__file__)
-    parentfolder = path_edit.parent.absolute()
-    search = os.listdir (parentfolder)
-    if "editor_mode.py" in search:
-        os.system ("python editor_mode.py")
-    elif "editor_mode.exe" in search:
-        os.system ("editor_mode.exe")
-    else:
-        messagebox.showerror ("Error", "Editor mode not found")
 with open ("user-change.json", "r") as f:
     data = json.load (f)
-main = tk.Tk()
-main.geometry ("660x600")
-main.title ("fileIn2WinSanbox v3.2beta")
-main.resizable (width = False, height = False)
-icon_path = 'icon/icon.ico'
-main.iconbitmap(icon_path)
 
 val_ranname = tk.IntVar (main, value = 0)
 val_creatintemp = tk.IntVar (main, value = 0)
@@ -457,8 +483,6 @@ checkbox3 = tk.Checkbutton (main, text = "Random name for Folder", variable = va
 button2 = tk.Button (main, text = "Direct Folder", command = direct_folder)
 button3 = tk.Button (main, text="Start", command = creat)
 button4 = tk.Button (main, text="Direct Output Folder", command = direct_output_folder)
-button5 = tk.Button (main, text="Advanced", command = advanced)
-button6 = tk.Button (main, text="Personalize", command = personalize)
 label1 = tk.Label (main, text = "Waiting for input ....", bg = "white", width = 40, height = 1)
 entry_locate = tk.Entry (main)
 entry_filename = tk.Entry (main)
@@ -475,7 +499,8 @@ about_menu.add_command (label = "About", command = lambda: messagebox.showinfo (
 about_menu.add_command (label = "Github", command = lambda: webbrowser.open ("https://github.com/break08/fileIn2WinSanbox"))
 about_menu.add_command (label = "MIT LICENSE", command = MIT_LICENSE)
 about_menu.add_command (label = "README", command = README)
-file_menu.add_command (label = "Open Editor Mode", command = open_editor_mode)
+file_menu.add_command (label = "Open", command = open_file)
+file_menu.add_command (label = "Settings", command = personalize)
 
 
 #pack
@@ -493,9 +518,7 @@ entry_filename.place (x = 10, y = 120)
 entry_ouput.place (x = 300, y = 30)
 file_content.place (x = 10, y = 250)
 button3.place (x = 10, y = 200)
-button4.place (x = 450, y = 28)
-button5.place (x = 80, y = 200)
-button6.place (x = 180, y = 200)
+button4.place (x = 425, y = 28)
 
 #language
 if data["language"] == "english":
@@ -506,34 +529,8 @@ elif data["language"] == "chinese":
     lang_val = "中国人"
 elif data["language"] == "spanish":
     lang_val = "Español"
-if data["vgpu"] == "0":
-    vgpu_val = "Disable"
-else:
-    vgpu_val = "Enable"
-if data["network"] == "0":
-    network_val = "Disable"
-else:
-    network_val = "Default"
-
-if data["audio"] == "0":
-    audio_val = "Disable"
-else:
-    audio_val = "Default"
-
-if data["video"] == "0":
-    video_val = "Disable"
-else:
-    video_val = "Default"
-
-if data["graphicsgpu"] == "0":
-    graphics_val = "Disable"
-else:
-    graphics_val = "Default"
-
-if data["readonly"] == "0":
-    readonly_val = "false"
-else:
-    readonly_val = "true"
+changes()
 langcheck_main()
+langcheck_advanced()   
 
 main.mainloop()
